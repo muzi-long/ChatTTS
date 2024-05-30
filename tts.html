@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Text to Speech</title>
+        <style>
+            #loading {
+                display: none;
+                font-weight: bold;
+                color: red;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Text to Speech</h1>
+        <h3><a href="https://github.com/2noise/ChatTTS">chatTTS</a></h3>
+        <input
+            style="height: 50px; width: 400px"
+            type="text"
+            id="textInput"
+            placeholder="输入你需要转换的内容,尽量少输入一点文字，不然需要等待久一点"
+        /><br />
+        <p></p>
+
+        <button id="listenButton">试听</button><br />
+
+        <div id="loading">Loading...</div>
+        <br />
+
+        <audio id="audioPlayer" controls></audio>
+
+        <script>
+            document
+                .getElementById("listenButton")
+                .addEventListener("click", function () {
+                    const textInput =
+                        document.getElementById("textInput").value;
+                    if (textInput.trim() === "") {
+                        alert("Please enter some text.");
+                        return;
+                    }
+
+                    const url = `/tts?text=${encodeURIComponent(textInput)}`;
+                    const loadingIndicator = document.getElementById("loading");
+                    loadingIndicator.style.display = "block";
+
+                    fetch(url)
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error(
+                                    "Network response was not ok " +
+                                        response.statusText,
+                                );
+                            }
+                            return response.blob();
+                        })
+                        .then((blob) => {
+                            const audioPlayer =
+                                document.getElementById("audioPlayer");
+                            const audioURL = URL.createObjectURL(blob);
+                            audioPlayer.src = audioURL;
+                            audioPlayer.play();
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "There was a problem with the fetch operation:",
+                                error,
+                            );
+                        })
+                        .finally(() => {
+                            loadingIndicator.style.display = "none";
+                        });
+                });
+        </script>
+    </body>
+</html>
