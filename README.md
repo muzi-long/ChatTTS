@@ -5,7 +5,7 @@
 ## 运行
 ### 最简单的运行方式
 ```bash
-docker run -p 8889:8889 xsdhy/chattts:latest
+docker run -p 8889:8889 712120393/chattts:latest
 ```
 启动后，程序会自动到huggingface上下载模型，并启动服务。
 
@@ -17,7 +17,7 @@ version: '3.8'
 
 services:
   chattts:
-    image: xsdhy/chattts:latest
+    image: 712120393/chattts:latest
     ports:
       - "8889:8889"
     environment:
